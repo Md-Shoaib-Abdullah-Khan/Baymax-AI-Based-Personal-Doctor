@@ -1,0 +1,10 @@
+ECHO is on.
+
+# Ignore python cache files
+__pycache__/
+*.pyc
+
+myenv
+venv
+
+.env
