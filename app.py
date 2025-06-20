@@ -1,12 +1,12 @@
 import streamlit as st
-import sounddevice as sd
 import numpy as np
 import scipy.io.wavfile as wav
 from PIL import Image
 from patient_voice import record_audio, convert_spech_to_text
 from doctor import doc
 from doctor_voice import tts_with_gtts
-
+import pygame
+import io
 st.set_page_config(page_title="Image + Voice Recorder App")
 st.title("AI Doctor")
 
@@ -22,14 +22,14 @@ if uploaded_file:
     image.save(image_path)
 
 
-# Buttons
-st.header("Tell me your problem in voice:")
+st.header("Tell me your problem:")
 
 
 if st.button("Start Recording 🎙️"):
-    file_path = 'output.wav'
-    record_audio(file_path=file_path, timeout=5)
-    query = convert_spech_to_text(file_path=file_path)
+    
+    record_audio('patient_voice.wav', timeout=5)
+    query = convert_spech_to_text('patient_voice.wav')
     doc_response = doc(image_path=image_path, patient_statement=query)
-    tts_with_gtts(doc_response, "doctor_voice.mp3")
+    tts_with_gtts(doc_response)
+    
 

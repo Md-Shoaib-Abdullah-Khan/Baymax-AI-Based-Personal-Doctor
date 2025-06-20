@@ -27,12 +27,8 @@ def convert_spech_to_text(file_path):
     transcription = client.audio.transcriptions.create(
         model = stt_model,
         file=audio_file,
-        language='bn'
+        language='en'
     )
     print(transcription)
     return transcription.text
-
-
-record_audio(file_path)
-convert_spech_to_text(file_path)
 

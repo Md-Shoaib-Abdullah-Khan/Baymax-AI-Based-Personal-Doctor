@@ -12,16 +12,16 @@ def doc(image_path, patient_statement):
     encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 
     vision_llm = ChatGroq(
-        model = "llama-3.2-90b-vision-preview",
+        model = "meta-llama/llama-4-maverick-17b-128e-instruct",
         api_key=GROQ_API_KEY
         ) 
     
 
-    query = """আপনি একজন ডাক্তার। আপনার রোগী তার অবস্থা চিত্র এবং লেখার মাধ্যমে প্রকাশ করে আপনার কাছে সাহায্য চাইবেন। ছবি এবং রোগীর বক্তব্য বিশ্লেষণ করুন এবং রোগীর রোগ সনাক্ত করুন। আউটপুটে আপনার বিশ্লেষণ সংক্ষেপে বর্ণনা করুন।" 
-    \
-    Patient statement: {patient_statement}
-    \
-    your Answer:
+    query = f"""You are a doctor. Your patient will ask you for help by expressing his condition through pictures and texts. 
+    Analyze the pictures and the patient's statement. Replay in few lines according to patient statement.
+    \\
+    Patient's statement: {patient_statement}
+    \\
     """
     message = [
         {
@@ -41,24 +41,5 @@ def doc(image_path, patient_statement):
         }
     ]
     response = vision_llm.invoke(message).content
-
-    message = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    'type': 'text',
-                    'text': "Translate this text into bangla: {response}"
-                }    
-            ]
-        }
-    ]
-
-    translation_llm = ChatGroq(
-        model = "gemma2-9b-it",
-        api_key=GROQ_API_KEY
-        ) 
-
-    bangla_response = translation_llm.invoke(message).content
-    print(bangla_response)
+    print(response)
     return response
